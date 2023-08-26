@@ -1,7 +1,5 @@
 # Linux下轻量Web服务器
 
-## 模拟Proactor模式
-![模拟Proactor模式](https://github.com/zxll0106/webserver/blob/main/%E6%A8%A1%E6%8B%9Fproactort.PNG)
 
 ## 线程池类 threadpool
 
@@ -34,4 +32,44 @@
 
 
 ![threadpool](https://github.com/zxll0106/webserver/blob/main/threadpool%E7%B1%BB.PNG)
+
+## http_conn类
+有限状态机解析HTTP请求，支持解析GET请求，访问网页。
+
+`m_epollfd`:static,所有连接的事件都被注册到同一个epooll内核事件表中，所以epollfd是静态的
+
+`m_user_count`: static，统计有多少用户
+
+`m_sockfd`：HTTP连接的fd
+
+`m_read_buf` ：读缓冲区
+`m_read_idx`：已经读了多少
+`m_checked_idx`：已经解析了多少
+
+`m_write_buf`：写缓冲区
+`m_write_idx`：还没发送的数据有多少
+
+`m_check_state`：状态机所处状态
+```
+enum METHOD {GET = 0, POST, HEAD, PUT, DELETE, TRACE, OPTIONS, CONNECT};
+    
+    /*
+        解析客户端请求时，主状态机的状态
+        CHECK_STATE_REQUESTLINE:当前正在分析请求行
+        CHECK_STATE_HEADER:当前正在分析头部字段
+        CHECK_STATE_CONTENT:当前正在解析请求体
+    */
+```
+
+`m_method`： 请求方法
+
+`m_real_file`：客户请求的目标文件的完整路径
+`m_file_address`：客户请求的目标文件被mmap到内存中的起始位置
+
+`init()`
+
+
+
+
+
 
